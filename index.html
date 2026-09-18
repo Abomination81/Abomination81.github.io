@@ -62,10 +62,17 @@ img{max-width:100%;display:block}
 .page{position:relative;max-width:var(--max);margin:0 auto;overflow:hidden}
 .glow{position:absolute;right:-16%;top:-14%;width:min(900px,120vw);aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(57,255,20,.26) 0%,rgba(57,255,20,0) 62%);pointer-events:none;z-index:0}
-.ghoul{position:absolute;right:0;top:40px;width:min(680px,72vw);aspect-ratio:1;object-fit:cover;z-index:0;
+.ghoul{position:absolute;right:0;top:0;width:min(680px,72vw);aspect-ratio:1;object-fit:cover;z-index:0;
   -webkit-mask-image:linear-gradient(to left,#000 48%,transparent 100%);
   mask-image:linear-gradient(to left,#000 48%,transparent 100%)}
-.page > *:not(.glow):not(.ghoul){position:relative;z-index:1}
+/* Softens the image's top and bottom edges into the black so neither cut
+   shows as a straight line across the page. */
+.edgefade{position:absolute;left:0;right:0;z-index:1;pointer-events:none}
+.edgefade.top{top:0;height:clamp(90px,12vw,150px);
+  background:linear-gradient(to bottom,#000 0%,rgba(0,0,0,.75) 45%,rgba(0,0,0,0) 100%)}
+.edgefade.bottom{top:calc(min(680px,72vw) - 140px);height:200px;
+  background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,.85) 60%,#000 78%,#000 100%)}
+.page > *:not(.glow):not(.ghoul):not(.edgefade){position:relative;z-index:2}
 
 /* ---------- nav ---------- */
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:26px;flex-wrap:wrap}
@@ -214,6 +221,8 @@ footer .fl{display:flex;gap:clamp(14px,2vw,26px)}
 
   <div class="glow" aria-hidden="true"></div>
   <img class="ghoul" src="/assets/avatar.jpg" alt="" aria-hidden="true">
+  <div class="edgefade top" aria-hidden="true"></div>
+  <div class="edgefade bottom" aria-hidden="true"></div>
 
   <div class="wrap">
     <nav class="nav">
