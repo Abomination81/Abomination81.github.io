@@ -9,7 +9,9 @@ Landing page for [@Abomination81](https://x.com/Abomination81). Static, no build
 | Quote rotation | `QUOTES` array near the bottom of `index.html`. One entry per quote: `["quote", "who said it"]`. Empty name prints no attribution. One shows per day, same for every visitor. |
 | Follower / post counts | `stats.json`. The numbers written into `index.html` are the fallback if the fetch fails. |
 | GitHub stars | Nothing to edit. Summed live from the GitHub API on page load. |
-| Start here list | The `.row` links in the `#start-here` section. |
+| Start here list | The `.row` links in the `#start-here` section of `index.html`. |
+| Side hustles | `side_hustles/index.html`. One `.hitem` block per hustle: number, title, amount, description, link. |
+| Shared styling | `assets/site.css`, used by every page. |
 | Featured post | The `.featured` block in `#band`. |
 
 ## Deploying
