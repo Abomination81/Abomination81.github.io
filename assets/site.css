@@ -231,3 +231,34 @@ footer .fl{display:flex;gap:clamp(14px,2vw,26px)}
 .endnote .big{font-family:Anton,Impact,sans-serif;text-transform:uppercase;
   font-size:clamp(20px,2.6vw,32px);line-height:1.05}
 .endnote .big em{font-style:normal;color:var(--green)}
+
+/* ================= follow prompt ================= */
+.fp-veil{position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+  padding:20px;background:rgba(0,0,0,.84);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);
+  opacity:0;transition:opacity .2s ease}
+.fp-veil.is-open{opacity:1}
+.fp-card{position:relative;width:100%;max-width:430px;padding:clamp(26px,4vw,36px);
+  background:var(--surface);border:1px solid var(--green);text-align:center;
+  box-shadow:0 0 0 1px rgba(0,0,0,.6),0 24px 70px rgba(0,0,0,.75),0 0 60px rgba(57,255,20,.12);
+  transform:translateY(10px) scale(.985);transition:transform .22s cubic-bezier(.2,.8,.3,1)}
+.fp-veil.is-open .fp-card{transform:none}
+.fp-x{position:absolute;top:8px;right:10px;width:38px;height:38px;display:grid;place-items:center;
+  background:none;border:0;color:var(--muted-2);font-size:26px;line-height:1;cursor:pointer;padding:0}
+.fp-x:hover{color:var(--green)}
+.fp-face{width:76px;height:76px;margin:0 auto 16px;object-fit:cover;border:2px solid var(--green);
+  box-shadow:0 0 26px rgba(57,255,20,.3)}
+.fp-eyebrow{margin:0 0 8px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--green)}
+.fp-h{margin:0 0 12px;font-size:clamp(30px,5vw,40px);line-height:1;color:var(--text)}
+.fp-b{margin:0 0 22px;font-size:15px;line-height:1.5;color:var(--muted)}
+.fp-yes{display:flex;align-items:center;justify-content:center;height:54px;
+  background:var(--green);color:#000;text-transform:uppercase;
+  font-size:clamp(17px,2.4vw,20px);letter-spacing:.03em}
+.fp-yes:hover{background:var(--green-soft);color:#000}
+.fp-no{display:block;width:100%;margin-top:10px;padding:13px 0;background:none;
+  border:1px solid var(--line);color:var(--muted);cursor:pointer;
+  font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.fp-no:hover{border-color:var(--muted-2);color:var(--text)}
+@media (prefers-reduced-motion:reduce){
+  .fp-veil,.fp-card{transition:none}
+  .fp-card{transform:none}
+}

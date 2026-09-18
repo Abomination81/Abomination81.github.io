@@ -12,6 +12,7 @@ Landing page for [@Abomination81](https://x.com/Abomination81). Static, no build
 | Start here list | The `.row` links in the `#start-here` section of `index.html`. |
 | Side hustles | `side_hustles/index.html`. One `.hitem` block per hustle: number, title, amount, description, link. |
 | Shared styling | `assets/site.css`, used by every page. |
+| Follow prompt | `assets/follow.js`. Timing, wording and the snooze window are the constants at the top of the file. Answering it is remembered in the browser, so it asks once. |
 | Featured post | The `.featured` block in `#band`. |
 
 ## Deploying
