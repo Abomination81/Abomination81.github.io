@@ -12,6 +12,7 @@ Landing page for [@Abomination81](https://x.com/Abomination81). Static, no build
 | Start here list | The `.row` links in the `#start-here` section of `index.html`. |
 | Side hustles | `side_hustles/index.html`. One `.hitem` block per hustle: number, title, amount, description, link. |
 | Shared styling | `assets/site.css`, used by every page. |
+| Hero variants | `assets/hero.js` swaps the portrait for a video when the URL has `?hero=kling`, `?hero=seedance` or `?hero=hailuo`. Files live in `assets/hero/`. The unlisted `/ab/` page compares them. |
 | Follow prompt | `assets/follow.js`. Timing, wording and the snooze window are the constants at the top of the file. Answering it is remembered in the browser, so it asks once. |
 | Featured post | The `.featured` block in `#band`. |
 

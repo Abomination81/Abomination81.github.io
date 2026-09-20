@@ -9,7 +9,7 @@ def digest(path):
     return hashlib.md5(open(path, "rb").read()).hexdigest()[:8]
 
 stamps = {os.path.basename(p): digest(p) for p in glob.glob("assets/*.css") + glob.glob("assets/*.js")}
-pat = re.compile(r'(/assets/(site\.css|follow\.js))(\?v=[0-9a-f]+)?')
+pat = re.compile(r'(/assets/([a-z0-9_-]+\.(?:css|js)))(\?v=[0-9a-f]+)?')
 for page in ["index.html"] + glob.glob("*/index.html"):
     t = io.open(page, encoding="utf-8").read()
     new = pat.sub(lambda m: "%s?v=%s" % (m.group(1), stamps[m.group(2)]), t)
