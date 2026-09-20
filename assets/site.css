@@ -32,7 +32,7 @@ img{max-width:100%;display:block}
 .page{position:relative;max-width:var(--max);margin:0 auto;overflow:hidden}
 .glow{position:absolute;right:-16%;top:-14%;width:min(900px,120vw);aspect-ratio:1;border-radius:50%;
   background:radial-gradient(circle,rgba(57,255,20,.26) 0%,rgba(57,255,20,0) 62%);pointer-events:none;z-index:0}
-.ghoul{position:absolute;right:0;top:0;width:min(680px,72vw);aspect-ratio:1;object-fit:cover;z-index:0;
+.ghoul{position:absolute;right:0;top:0;width:min(680px,72vw);aspect-ratio:1;z-index:0;overflow:hidden;
   -webkit-mask-image:linear-gradient(to left,#000 48%,transparent 100%);
   mask-image:linear-gradient(to left,#000 48%,transparent 100%)}
 /* Softens the image's top and bottom edges into the black so neither cut
@@ -261,4 +261,55 @@ footer .fl{display:flex;gap:clamp(14px,2vw,26px)}
 @media (prefers-reduced-motion:reduce){
   .fp-veil,.fp-card{transition:none}
   .fp-card{transform:none}
+}
+
+
+/* ================= living portrait =================
+   One 14 second loop. Every animation below is 14s, 7s or 3.5s so the whole
+   thing lines up and the first and last frames are identical.               */
+.ghoul-breath{position:absolute;inset:0;transform-origin:50% 100%;will-change:transform;
+  animation:gh-breathe 7s ease-in-out infinite}
+.ghoul-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+/* A second copy of the face, masked down to the mouth, that slowly widens. */
+.ghoul-img.mouth{transform-origin:56% 60%;animation:gh-smile 14s ease-in-out infinite;
+  -webkit-mask-image:radial-gradient(ellipse 15% 8% at 56% 60%,#000 30%,transparent 100%);
+  mask-image:radial-gradient(ellipse 15% 8% at 56% 60%,#000 30%,transparent 100%)}
+.ghoul-eye{position:absolute;left:59%;top:37%;width:11%;aspect-ratio:1;transform:translate(-50%,-50%);
+  border-radius:50%;mix-blend-mode:screen;pointer-events:none;
+  background:radial-gradient(circle,rgba(160,255,120,.95) 0%,rgba(57,255,20,.55) 30%,rgba(57,255,20,0) 70%);
+  animation:gh-eye 7s ease-in-out infinite}
+.ghoul-aura{position:absolute;left:74%;top:42%;width:64%;aspect-ratio:1;transform:translate(-50%,-50%);
+  border-radius:50%;mix-blend-mode:screen;pointer-events:none;
+  background:radial-gradient(circle,rgba(57,255,20,.32) 0%,rgba(57,255,20,.12) 35%,rgba(57,255,20,0) 68%);
+  animation:gh-aura 14s ease-in-out infinite}
+.ghoul-drops{position:absolute;inset:0;pointer-events:none}
+.ghoul-drops i{position:absolute;width:5px;height:5px;border-radius:50%;background:#7dff64;opacity:0;
+  box-shadow:0 0 8px 2px rgba(57,255,20,.8);animation:gh-rise 7s ease-out infinite}
+.ghoul-drops i:nth-child(1){left:70%;top:34%;animation-delay:0s}
+.ghoul-drops i:nth-child(2){left:78%;top:30%;animation-delay:1.1s;width:3px;height:3px}
+.ghoul-drops i:nth-child(3){left:84%;top:40%;animation-delay:2.3s}
+.ghoul-drops i:nth-child(4){left:66%;top:46%;animation-delay:3.2s;width:4px;height:4px}
+.ghoul-drops i:nth-child(5){left:88%;top:26%;animation-delay:4.4s;width:3px;height:3px}
+.ghoul-drops i:nth-child(6){left:74%;top:52%;animation-delay:5.6s}
+.ghoul-drops i:nth-child(7){left:81%;top:47%;animation-delay:0.6s;width:3px;height:3px;animation-duration:3.5s}
+.ghoul-drops i:nth-child(8){left:92%;top:35%;animation-delay:1.9s;animation-duration:3.5s}
+.ghoul-drops i:nth-child(9){left:63%;top:38%;animation-delay:2.8s;width:3px;height:3px;animation-duration:3.5s}
+.ghoul-drops i:nth-child(10){left:76%;top:22%;animation-delay:0.3s;width:4px;height:4px}
+.ghoul-drops i:nth-child(11){left:86%;top:56%;animation-delay:5s;width:3px;height:3px;animation-duration:3.5s}
+.ghoul-drops i:nth-child(12){left:69%;top:60%;animation-delay:6.2s;width:4px;height:4px}
+
+@keyframes gh-breathe{0%,100%{transform:scale(1) translateY(0)}50%{transform:scale(1.016) translateY(-4px)}}
+@keyframes gh-smile{0%,30%,100%{transform:scale(1,1) translateY(0)}55%,72%{transform:scale(1.05,.98) translateY(-1.5px)}}
+@keyframes gh-eye{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.3)}}
+@keyframes gh-aura{0%,100%{opacity:.45;transform:translate(-50%,-50%) scale(1)}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.1)}}
+@keyframes gh-rise{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:1}
+  100%{opacity:0;transform:translate(14px,-70px) scale(1)}}
+
+/* The liquid ripple is a per-frame SVG filter, so it stays on pointer devices
+   with room to spare and is left off on phones. */
+@media (hover:hover) and (min-width:900px){.ghoul-breath{filter:url(#gooflow)}}
+@media (prefers-reduced-motion:reduce){
+  .ghoul-breath,.ghoul-img.mouth,.ghoul-eye,.ghoul-aura,.ghoul-drops i{animation:none!important}
+  .ghoul-breath{filter:none}
+  .ghoul-img.mouth,.ghoul-drops{display:none}
 }

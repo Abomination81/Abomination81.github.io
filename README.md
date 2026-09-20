@@ -17,4 +17,4 @@ Landing page for [@Abomination81](https://x.com/Abomination81). Static, no build
 
 ## Deploying
 
-Push to `main`. GitHub Pages publishes automatically.
+Run `python3 stamp.py` first. It tags the stylesheet and script URLs in every page with a content hash so returning visitors never get new HTML with a cached old stylesheet. Then push to `main`; GitHub Pages publishes automatically.
