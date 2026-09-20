@@ -357,3 +357,10 @@ footer .fl{display:flex;gap:clamp(14px,2vw,26px)}
   .ghoul{right:-26%}
   .hero h1{font-size:clamp(38px,12.6vmin,72px)}
 }
+
+/* Homepage nav carries no wordmark, the hero says it. Footer carries no
+   credit line. Both then need their remaining content pushed to the right. */
+.nav.nav-bare{justify-content:flex-end}
+footer.foot-bare{justify-content:flex-end}
+.about .who .nm{color:var(--green)}
+.about .who .nm:hover{color:var(--green-soft)}
