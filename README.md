@@ -11,6 +11,7 @@ Landing page for [@Abomination81](https://x.com/Abomination81). Static, no build
 | GitHub stars | Nothing to edit. Summed live from the GitHub API on page load. |
 | Start here list | The `.row` links in the `#start-here` section of `index.html`. |
 | Side hustles | `side_hustles/index.html`. One `.hitem` block per hustle: number, title, amount, description, link. |
+| Share card | `assets/og/card-*.jpg` (1200x630, every platform) and `card-x-*.jpg` (1200x600, X's 2:1 crop). Filenames carry a content hash so X and Facebook fetch a fresh card when it changes. Source HTML lives in the session scratchpad under `cards/`. |
 | Display font | `assets/fonts/anton-latin.woff2`, self-hosted and preloaded from each page's head so the hero wordmark never renders in a fallback first. Body faces still come from Google. |
 | Shared styling | `assets/site.css`, used by every page. |
 | Hero variants | `assets/hero.js` swaps the portrait for a video when the URL has `?hero=kling`, `?hero=seedance` or `?hero=hailuo`. Files live in `assets/hero/`. Kling and Seedance loop natively and are cut straight; Hailuo is a ping-pong because it does not return to its first frame. The unlisted `/ab/` page compares them. |
