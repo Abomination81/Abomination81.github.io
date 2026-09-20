@@ -1,3 +1,13 @@
+/* Self-hosted so the 228px wordmark is ready at first paint instead of
+   rendering in a fallback and then jumping. Preloaded from each page's head. */
+@font-face{
+  font-family:'Anton';
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url('/assets/fonts/anton-latin.woff2') format('woff2');
+}
+
 :root{
   --bg:#000;
   --surface:#08110a;
@@ -317,7 +327,10 @@ footer .fl{display:flex;gap:clamp(14px,2vw,26px)}
 
 /* ================= hero video variant (?hero=) ================= */
 .ghoul-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;background:#000}
-.ghoul.has-video .ghoul-breath{display:none}
+/* The clip has its own droplets and slime motion. Running the CSS particle
+   layer on top of it stacks two motion systems and reads as busy. */
+.ghoul.has-video .ghoul-breath,
+.ghoul.has-video .ghoul-drops{display:none}
 .hero-switch{position:fixed;left:14px;bottom:14px;z-index:50;display:flex;align-items:center;gap:12px;
   padding:10px 14px;background:#000;border:1px solid var(--green);font-size:11px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--muted-2)}
