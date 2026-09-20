@@ -11,6 +11,7 @@
 (function () {
   "use strict";
   var VIDEOS = ["kling", "seedance", "hailuo"];
+  var HERO_V = {"hailuo": "a31e1fda", "kling": "43f04339", "seedance": "eb99524d"}; // stamped by stamp.py
   var want = new URLSearchParams(location.search).get("hero");
   if (!want && !document.querySelector(".abcard video")) return;
 
@@ -21,8 +22,9 @@
     v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true;
     v.setAttribute("muted", ""); v.setAttribute("playsinline", ""); v.setAttribute("loop", "");
     v.preload = "auto";
-    v.poster = "/assets/hero/hero_" + want + "_poster.jpg";
-    v.src = "/assets/hero/hero_" + want + ".mp4";
+    var ver = HERO_V[want] ? "?v=" + HERO_V[want] : "";
+    v.poster = "/assets/hero/hero_" + want + "_poster.jpg" + ver;
+    v.src = "/assets/hero/hero_" + want + ".mp4" + ver;
     ghoul.classList.add("has-video");
     ghoul.insertBefore(v, ghoul.firstChild);
     kick(v);
