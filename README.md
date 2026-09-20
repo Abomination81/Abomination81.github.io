@@ -15,7 +15,7 @@ Landing page for [@Abomination81](https://x.com/Abomination81). Static, no build
 | Share card | `assets/og/card-*.jpg` (1200x630, every platform) and `card-x-*.jpg` (1200x600, X's 2:1 crop). Filenames carry a content hash so X and Facebook fetch a fresh card when it changes. Source HTML lives in the session scratchpad under `cards/`. |
 | Display font | `assets/fonts/anton-latin.woff2`, self-hosted and preloaded from each page's head so the hero wordmark never renders in a fallback first. Body faces still come from Google. |
 | Shared styling | `assets/site.css`, used by every page. |
-| Hero variants | `assets/hero.js` swaps the portrait for a video when the URL has `?hero=kling`, `?hero=seedance` or `?hero=hailuo`. Files live in `assets/hero/`. Kling and Seedance loop natively and are cut straight; Hailuo is a ping-pong because it does not return to its first frame. The unlisted `/ab/` page compares them. |
+| Hero video | Plays for everyone. `assets/hero.js` picks the 1080px cut above 900px wide and the 640px cut below. Skipped, leaving the CSS still, for reduced-motion or metered connections. |
 | Follow prompt | `assets/follow.js`. Timing, wording and the snooze window are the constants at the top of the file. Answering it is remembered in the browser, so it asks once. |
 | Featured post | The `.featured` block in `#band`. |
 
