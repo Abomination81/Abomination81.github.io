@@ -1,10 +1,11 @@
 /* Follow prompt.
  *
- * Shows once per visitor, never on arrival. It waits for the visitor to either
- * spend real time on the page, scroll a meaningful way down, or move to leave.
+ * Asks at most once per page load, and never on arrival. It waits for the
+ * visitor to spend real time on the page, scroll a meaningful way down, or
+ * move to leave.
  *
- * Answering it is final. "Follow" and "I already follow you" both stop it
- * permanently. Closing it without answering snoozes it for SNOOZE_DAYS.
+ * Answering is final. "Follow" and "I already follow you" both stop it for
+ * good. Closing without answering snoozes it for SNOOZE_DAYS.
  *
  * Tuning knobs are the constants directly below.
  */
@@ -43,10 +44,24 @@
 
   if (!shouldAsk()) return;
 
-  /* ---------- build ---------- */
+  /* ---------- state ---------- */
 
-  var root, panel, opener, armed = false, shown = false, pending = null;
+  var root, panel, opener;
+  var shown = false;
+  var finished = false;   // asked and dealt with: never reopen this page load
   var startedAt = Date.now();
+  var delayTimer = null, pendingTimer = null, onScroll = null, onExit = null;
+
+  // Disarms every trigger. Called as soon as the prompt is shown or answered,
+  // so nothing can reopen it behind the visitor's back.
+  function disarm() {
+    if (delayTimer) { clearTimeout(delayTimer); delayTimer = null; }
+    if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
+    if (onScroll) { window.removeEventListener("scroll", onScroll); onScroll = null; }
+    if (onExit) { document.removeEventListener("mouseout", onExit); onExit = null; }
+  }
+
+  /* ---------- build ---------- */
 
   function build() {
     root = document.createElement("div");
@@ -65,103 +80,104 @@
     document.body.appendChild(root);
 
     panel = root.querySelector(".fp-card");
-    root.querySelector(".fp-yes").addEventListener("click", function () {
-      remember("followed");
-      close(true);
-    });
-    root.querySelector(".fp-no").addEventListener("click", function () {
-      remember("already");
-      close();
-    });
-    root.querySelector(".fp-x").addEventListener("click", function () {
-      remember("closed");
-      close();
-    });
+    root.querySelector(".fp-yes").addEventListener("click", function () { answer("followed"); });
+    root.querySelector(".fp-no").addEventListener("click", function () { answer("already"); });
+    root.querySelector(".fp-x").addEventListener("click", function () { answer("closed"); });
     root.addEventListener("mousedown", function (e) {
-      if (e.target === root) { remember("closed"); close(); }
+      if (e.target === root) answer("closed");
     });
     document.addEventListener("keydown", onKey);
   }
 
   /* ---------- focus handling ---------- */
 
-  function focusables() {
-    return panel.querySelectorAll("a[href], button");
-  }
-
   function onKey(e) {
     if (!shown) return;
-    if (e.key === "Escape") { remember("closed"); close(); return; }
-    if (e.key !== "Tab") return;
-    var f = focusables();
+    if (e.key === "Escape") { answer("closed"); return; }
+    if (e.key !== "Tab" || !panel) return;
+    var f = panel.querySelectorAll("a[href], button");
     if (!f.length) return;
     var first = f[0], last = f[f.length - 1];
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
 
-  /* ---------- show / close ---------- */
+  /* ---------- show / answer ---------- */
 
   function show() {
-    if (shown) return;
+    if (finished || shown) return;
+    if (!shouldAsk()) { finished = true; disarm(); return; }
     shown = true;
+    disarm();               // one prompt per page load, whatever happens next
     opener = document.activeElement;
     build();
-    // let the element land before transitioning, so it animates in
     requestAnimationFrame(function () {
+      if (!root) return;
       root.classList.add("is-open");
       var yes = root.querySelector(".fp-yes");
       if (yes) yes.focus();
     });
   }
 
-  function close(keepScroll) {
-    if (!root) return;
+  // Every exit from the prompt goes through here, so the answer is always
+  // recorded and the triggers are always disarmed.
+  function answer(state) {
+    if (finished) return;
+    finished = true;
+    remember(state);
+    disarm();
+    close(state === "followed");
+  }
+
+  function close(keepFocus) {
     shown = false;
-    root.classList.remove("is-open");
     document.removeEventListener("keydown", onKey);
-    setTimeout(function () {
-      if (root && root.parentNode) root.parentNode.removeChild(root);
-      root = null;
-    }, 220);
-    if (!keepScroll && opener && opener.focus) { try { opener.focus(); } catch (e) {} }
+    var dying = root;
+    root = null;
+    panel = null;
+    if (dying) {
+      dying.classList.remove("is-open");
+      setTimeout(function () {
+        if (dying.parentNode) dying.parentNode.removeChild(dying);
+      }, 220);
+    }
+    if (!keepFocus && opener && opener.focus) { try { opener.focus(); } catch (e) {} }
   }
 
   /* ---------- triggers ---------- */
 
-  // A trigger that fires inside the MIN_MS floor is honoured late rather than
-  // dropped, so someone who scrolls straight down still gets asked.
   function trigger() {
-    if (shown || pending) return;
+    if (finished || shown || pendingTimer) return;
+    if (!shouldAsk()) { finished = true; disarm(); return; }
     var wait = MIN_MS - (Date.now() - startedAt);
-    if (wait > 0) { pending = setTimeout(show, wait); return; }
+    if (wait > 0) {
+      // Honour an early trigger late rather than dropping it, so someone who
+      // scrolls straight down still gets asked.
+      pendingTimer = setTimeout(function () { pendingTimer = null; show(); }, wait);
+      return;
+    }
     show();
   }
 
   function arm() {
-    if (armed) return;
-    armed = true;
+    delayTimer = setTimeout(trigger, DELAY_MS);
 
-    setTimeout(trigger, DELAY_MS);
-
-    function checkScroll() {
+    onScroll = function () {
       var doc = document.documentElement;
       var max = doc.scrollHeight - window.innerHeight;
-      if (max > 0 && window.scrollY / max >= SCROLL_PCT) {
-        window.removeEventListener("scroll", checkScroll);
-        trigger();
-      }
-    }
-    window.addEventListener("scroll", checkScroll, { passive: true });
+      if (max > 0 && window.scrollY / max >= SCROLL_PCT) trigger();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     // Also check on arrival: a restored scroll position or an anchor link can
     // land the visitor deep in the page without ever firing a scroll event.
-    checkScroll();
+    onScroll();
 
     // Exit intent, pointer devices only. Phones get the timer and scroll rules.
     if (window.matchMedia && window.matchMedia("(hover: hover)").matches) {
-      document.addEventListener("mouseout", function (e) {
+      onExit = function (e) {
         if (!e.relatedTarget && e.clientY <= 0) trigger();
-      });
+      };
+      document.addEventListener("mouseout", onExit);
     }
   }
 
