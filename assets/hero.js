@@ -35,8 +35,13 @@
   // Mode, some data-saver settings) hold the first play until the user does
   // anything. Retry on the first interaction and whenever the tab returns.
   function kick(el) {
-    function tryPlay() { var p = el.play(); if (p && p.catch) p.catch(function () {}); }
+    function tryPlay() { if (!el.paused) return; var p = el.play(); if (p && p.catch) p.catch(function () {}); }
     tryPlay();
+    // A play() issued before any data has arrived can be dropped. Ask again
+    // when data lands, and a couple more times shortly after, until it sticks.
+    el.addEventListener("loadeddata", tryPlay);
+    el.addEventListener("canplay", tryPlay);
+    setTimeout(tryPlay, 800); setTimeout(tryPlay, 2500); setTimeout(tryPlay, 6000);
     var once = function () { tryPlay(); ["pointerdown","touchstart","keydown","scroll"].forEach(function (e) { window.removeEventListener(e, once); }); };
     ["pointerdown","touchstart","keydown","scroll"].forEach(function (e) { window.addEventListener(e, once, { passive: true }); });
     document.addEventListener("visibilitychange", function () { if (!document.hidden) tryPlay(); });
