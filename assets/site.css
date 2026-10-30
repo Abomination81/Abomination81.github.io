@@ -358,3 +358,8 @@ footer .fl{display:flex;gap:clamp(14px,2vw,26px)}
 footer.foot-bare{justify-content:flex-end}
 .about .who .nm{color:var(--green)}
 .about .who .nm:hover{color:var(--green-soft)}
+
+/* Featured software uses a full row so the four existing projects keep their grid. */
+.repo-featured{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr) minmax(0,1fr);align-items:center;gap:24px;padding-inline:0;border-right:0;border-bottom:1px solid var(--line)}
+.repo-featured .meta{text-align:right}
+@media(max-width:760px){.repo-featured{grid-template-columns:minmax(0,1fr);gap:10px}.repo-featured .meta{text-align:left}}
