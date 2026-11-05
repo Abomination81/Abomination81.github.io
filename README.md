@@ -10,7 +10,7 @@ Landing page for [@Abomination81](https://x.com/Abomination81). Static, no build
 | Follower / post counts | `stats.json`. The numbers written into `index.html` are the fallback if the fetch fails. |
 | GitHub stars | Nothing to edit. Summed live from the GitHub API on page load. |
 | Start here list | The `.row` links in the `#start-here` section of `index.html`. |
-| Code & tools | Project links in `#code` in `index.html`. Video Downloader's install guide is published from `Abomination81/video-downloader` at `/video-downloader/`. |
+| Code & tools | Project links in `#code` in `index.html`. Abomination81 Toolkit's install guide is published from `Abomination81/video-downloader` at `/video-downloader/`. |
 | Side hustles | `side_hustles/index.html`. One `.hitem` block per hustle: number, title, amount, description, link. |
 | Favicon / icons | `favicon.ico` and `assets/icons/`: the eye for tab sizes (16, 32, 48), the face for home screens (180, 192, 512, plus a maskable 512). `site.webmanifest` lists the install icons. Source is the session scratchpad under `favicon/`. |
 | Share card | `assets/og/card-*.jpg` (1200x630, every platform) and `card-x-*.jpg` (1200x600, X's 2:1 crop). Filenames carry a content hash so X and Facebook fetch a fresh card when it changes. Source HTML lives in the session scratchpad under `cards/`. |
